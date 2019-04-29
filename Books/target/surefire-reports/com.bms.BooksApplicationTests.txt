@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.bms.BooksApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 29.137 s - in com.bms.BooksApplicationTests
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.04 s - in com.bms.BooksApplicationTests
