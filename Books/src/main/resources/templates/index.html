@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html xmlns:th= "http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<script type = "text/javascript" src="webjars/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="webjars/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="webjars/bootstrap/4.0.0/css/bootstrap.min.css"/>
+
+<title>Book Management</title>
+</head>
+<body>
+
+<div class = "container">
+<button class="btn btn-success nBtn">AddBook</button>
+<div class = "card">
+<div class="card-block">
+<table class="table table-hover">
+<thead>
+<tr>
+
+<th>#</th>
+<th>Title</th>
+<th>Author</th>
+<th>ISBN-13</th>
+
+
+</tr>
+</thead>
+
+<tbody>
+
+<tr th:each="Book :${data.content}">
+<td th:text="${Book.id}"> </td>
+<td th:text="${Book.title}"> </td>
+<td th:text="${Book.author}"> </td>
+<td th:text="${Book.ISBN}"> </td>
+<td> <a th:href="@{delete/(id=${Book.id})}" class="btn btn-danger delBtn">Delete</a></td>
+<td> <a th:href="@{findOne/(id=${Book.id})}" class="btn btn-primary eBtn">Edit</a></td>
+</tr>
+
+</tbody>
+
+</table>
+
+<hr />
+
+<ul class="nav nav-pills">
+<li class="nav-item" 
+ th:each="i : ${#numbers.sequence(0,data.totalPages -1)}">
+<a th:href="@{/(page=${i})}" th:text="${i}" class="nav-link"
+th:classappend="${currentPage}==${i}?'active':''"></a>
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+
+<div class="myForm">
+<form th:action="@{/save}" method="post">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update or Create</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      
+      <div class="form-group">
+            <label for="id" class="col-form-label">ID:</label>
+            <input type="text" class="form-control" id="id" name ="id" value = "" />
+          </div>
+        
+   	    <div class="form-group">
+            <label for="title" class="col-form-label">Title:</label>
+            <input type="text" class="form-control" id="title" name ="title" value = "" />
+          </div>
+          
+            <div class="form-group">
+            <label for="Author" class="col-form-label">Author:</label>
+            <input type="text" class="form-control" id="author" name ="author" value ="" />
+          </div>
+          
+              <div class="form-group">
+            <label for="isbn" class="col-form-label">ISBN:</label>
+            <input type="text" class="form-control" id="isbn" name ="ISBN" value ="" />
+          </div>
+          
+           
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="save" />
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="alert alert-danger">
+        Are you sure you want to delete this Book
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a  href="" class="btn btn-danger" id="delRef">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</body>
+
+
+<script>
+/**
+ * 
+ 
+ */
+ 
+ //Pop up modal, retain field values to edit existing book and clear field value to add new book
+
+ $(document).ready(function(){
+
+	 $('.nBtn, .table .eBtn').on('click', function(event){
+		 event.preventDefault();
+		 var href = $(this).attr('href');
+		 var text= $(this).text();
+		 if(text=='Edit'){
+				 $.get(href, function(Book, status){
+					
+					 $('.myForm #id').val(Book.id);
+					 $('.myForm #title').val(Book.title);
+					 $('.myForm #author').val(Book.author);
+					 $('.myForm #isbn').val(Book.isbn);
+					
+					 
+				 });	 
+$('.myForm #exampleModal').modal();
+	 } else {
+		
+		 $('.myForm #title').val('');
+		 $('.myForm #author').val('');
+		 $('.myForm #isbn').val('');
+		 $('.myForm #exampleModal').modal();
+		 
+	 }
+	 }); 
+	 
+//pop modal to delete book
+	 $('.table .delBtn').on('click', function(event){
+		  event.preventDefault();
+		  var href = $(this).attr('href');
+		  $('#myModal #delRef').attr('href', href);
+		  $('#myModal').modal();
+	 });
+ });
+</script>
+</html>
